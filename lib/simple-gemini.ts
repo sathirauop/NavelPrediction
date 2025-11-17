@@ -5,7 +5,7 @@
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { ShipDataInput, HealthStatus, TrendDirection } from "./types";
-import { StoredPrediction } from "./simple-storage";
+import { StoredPrediction } from "./memory-storage";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 

@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { ShipDataInput, PredictionResult } from "@/lib/types";
-import { getLatestPrediction, insertPrediction, getHistoricalData } from "@/lib/simple-storage";
+import { getLatestPrediction, insertPrediction, getHistoricalData } from "@/lib/memory-storage";
 import { predictWithGemini } from "@/lib/simple-gemini";
 
 // Force Node.js runtime for file system access

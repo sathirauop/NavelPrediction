@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { getAllPredictions, getHistoricalData } from "@/lib/simple-storage";
+import { getAllPredictions, getHistoricalData } from "@/lib/memory-storage";
 
 // Force Node.js runtime for file system access
 export const runtime = 'nodejs';

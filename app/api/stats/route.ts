@@ -4,7 +4,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { getDashboardStats } from "@/lib/simple-storage";
+import { getDashboardStats } from "@/lib/memory-storage";
 
 // Force Node.js runtime for file system access
 export const runtime = 'nodejs';
