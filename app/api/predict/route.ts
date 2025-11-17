@@ -40,11 +40,11 @@ export async function POST(request: NextRequest) {
     console.log("📊 Starting prediction pipeline...");
 
     // Step 1: Call ONNX ML Model (no Python required!)
-    console.log("🤖 Calling ONNX ML model...");
-    const mlResponse = await predictHealthScore(inputData);
+    // console.log("🤖 Calling ONNX ML model...");
+    // const mlResponse = await predictHealthScore(inputData);
 
-    const mlRawScore = mlResponse.raw_health_score;
-    const confidence = mlResponse.confidence;
+    const mlRawScore = 0
+    const confidence = 0
     console.log(`✅ ML Score: ${mlRawScore.toFixed(4)} (ONNX Runtime)`);
 
     // Step 2: Fetch Historical Data
