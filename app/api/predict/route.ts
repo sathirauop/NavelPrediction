@@ -9,6 +9,10 @@ import { getHistoricalData, insertPrediction, getLatestPrediction } from "@/lib/
 import { analyzeShipHealth } from "@/lib/gemini";
 import { predictHealthScore } from "@/lib/onnx-predictor";
 
+// Force Node.js runtime for ONNX compatibility
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     // Parse input data
