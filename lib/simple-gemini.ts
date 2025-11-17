@@ -27,8 +27,9 @@ export async function predictWithGemini(
   historicalData: StoredPrediction[]
 ): Promise<SimplePredictionResult> {
   try {
+    // Use Gemini 2.5 Flash - stable version (your API key has access to this)
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-exp",
+      model: "gemini-2.5-flash",
     });
 
     // Build historical context
