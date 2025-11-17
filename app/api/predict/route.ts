@@ -43,9 +43,9 @@ export async function POST(request: NextRequest) {
     // console.log("🤖 Calling ONNX ML model...");
     // const mlResponse = await predictHealthScore(inputData);
 
-    const mlRawScore = 0
-    const confidence = 0
-    console.log(`✅ ML Score: ${mlRawScore.toFixed(4)} (ONNX Runtime)`);
+    const mlRawScore = "0"
+    const confidence = "0"
+    // console.log(`✅ ML Score: ${mlRawScore.toFixed(4)} (ONNX Runtime)`);
 
     // Step 2: Fetch Historical Data
     console.log("📚 Fetching historical data...");
