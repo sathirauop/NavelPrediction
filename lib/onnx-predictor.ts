@@ -3,7 +3,7 @@
  * Pure TypeScript/Node.js implementation - no Python required
  */
 
-import * as ort from "onnxruntime-node";
+import * as ort from "onnxruntime-web";
 import path from "path";
 import { ShipDataInput } from "./types";
 
@@ -124,7 +124,7 @@ export async function getModelInfo(): Promise<{
       features: FEATURE_COLUMNS,
       feature_count: FEATURE_COLUMNS.length,
       output_range: "0.0 (healthy) to 1.0 (critical failure)",
-      runtime: "onnxruntime-node (no Python required)",
+      runtime: "onnxruntime-web (no Python required)",
     };
   } catch (error: any) {
     throw new Error(`Failed to get model info: ${error.message}`);
