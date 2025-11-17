@@ -187,13 +187,14 @@ function buildHistoricalSummary(data: StoredPrediction[]): string {
     return "No historical data available (this is the first prediction)";
   }
 
-  const recent = data.slice(-5);
+  const recent = data.slice(-10);
   const scores = recent.map(d => d.gemini_final_score.toFixed(3));
 
   const avgScore = recent.reduce((sum, d) => sum + d.gemini_final_score, 0) / recent.length;
   const lastStatus = recent[recent.length - 1]?.status || "Unknown";
 
-  return `Total records: ${data.length}
+  return `Total records: ${data.length},
+  records: ${JSON.stringify(data)}
 Last 5 scores: [${scores.join(", ")}]
 Average recent score: ${avgScore.toFixed(3)}
 Last status: ${lastStatus}`;
