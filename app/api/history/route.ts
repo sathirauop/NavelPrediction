@@ -1,0 +1,31 @@
+/**
+ * Historical Data API Route
+ */
+
+import { NextRequest, NextResponse } from "next/server";
+import { getAllPredictions, getHistoricalData } from "@/lib/database";
+
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const limit = searchParams.get("limit");
+
+    let data;
+    if (limit) {
+      data = await getHistoricalData(parseInt(limit));
+    } else {
+      data = await getAllPredictions();
+    }
+
+    return NextResponse.json({
+      count: data.length,
+      data: data,
+    });
+  } catch (error: any) {
+    console.error("Error fetching history:", error);
+    return NextResponse.json(
+      { error: error.message || "Failed to fetch history" },
+      { status: 500 }
+    );
+  }
+}
