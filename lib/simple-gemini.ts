@@ -52,7 +52,6 @@ export async function predictWithGemini(
 - Viscosity @40°C: ${inputData.viscosity_40} cSt
 - Oil Refill: ${inputData.oil_refill_start === 1 ? "Yes (fresh oil)" : "No"}
 - Oil Top-up: ${inputData.oil_topup === 1 ? "Yes" : "No"}
-- Previous Health Score: ${inputData.health_score_lag_1.toFixed(4)}
 ${inputData.fe_ppm ? `- Iron (Fe): ${inputData.fe_ppm} ppm (alarm limit: 80 ppm)` : ""}
 ${inputData.pb_ppm ? `- Lead (Pb): ${inputData.pb_ppm} ppm (alarm limit: 20 ppm)` : ""}
 ${inputData.cu_ppm ? `- Copper (Cu): ${inputData.cu_ppm} ppm (alarm limit: 25 ppm)` : ""}
@@ -131,7 +130,11 @@ Respond with ONLY valid JSON (no markdown, no code blocks, no explanations):
 Always try to compare with the historical data. If the input is closer to a history data try to give a score near for that. 
 Try to undertand what are normal and okay for each attribute
 
+Try to stay under 50 unleas there is a big anomaly. Keep a little bias towards the lower end of the spectrum. Keep under 30 in most cases. 
+
 Provide your JSON analysis now.`;
+
+console.log(prompt)
 
     const result = await model.generateContent(prompt);
     let response = result.response.text();
