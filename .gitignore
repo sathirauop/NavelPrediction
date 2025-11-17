@@ -46,3 +46,6 @@ next-env.d.ts
 /data/*.db-wal
 /data/sqlite_export.json
 /data/predictions.json
+
+# Keep seed data (committed to repo)
+!/lib/seed-data.json

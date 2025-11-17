@@ -1,10 +1,12 @@
 /**
  * In-Memory Storage for Ship Predictions
- * Perfect for Vercel deployment - no file system needed!
- * Note: Data is lost on server restart/redeploy
+ * - Loads 60 base historical records from seed data (always available)
+ * - New predictions are added in-memory (reset on restart)
+ * - Perfect for Vercel deployment!
  */
 
 import { HealthStatus, TrendDirection } from "./types";
+import seedData from "./seed-data.json";
 
 export interface StoredPrediction {
   id: number;
@@ -28,9 +30,32 @@ export interface StoredPrediction {
   confidence: string;
 }
 
-// In-memory store (resets on server restart)
-let predictions: StoredPrediction[] = [];
-let nextId = 1;
+// Initialize with seed data (60 historical records)
+let predictions: StoredPrediction[] = (seedData as any[]).map((item, index) => ({
+  id: index + 1,
+  timestamp: item.timestamp,
+  oil_hrs: item.oil_hrs,
+  total_hrs: item.total_hrs,
+  viscosity_40: item.viscosity_40,
+  oil_refill_start: item.oil_refill_start,
+  oil_topup: item.oil_topup,
+  health_score_lag_1: item.health_score_lag_1,
+  fe_ppm: item.fe_ppm,
+  pb_ppm: item.pb_ppm,
+  cu_ppm: item.cu_ppm,
+  al_ppm: item.al_ppm,
+  si_ppm: item.si_ppm,
+  ml_raw_score: item.ml_raw_score,
+  gemini_final_score: item.gemini_final_score,
+  status: item.status as HealthStatus,
+  trend: item.trend as TrendDirection,
+  recommendation: item.recommendation,
+  confidence: item.confidence,
+}));
+
+let nextId = predictions.length + 1;
+
+console.log(`📦 Loaded ${predictions.length} historical records from seed data`);
 
 /**
  * Insert a new prediction
@@ -161,10 +186,12 @@ export async function getDashboardStats(): Promise<{
 }
 
 /**
- * Initialize database (no-op for in-memory storage)
+ * Initialize database (seed data is auto-loaded on module import)
  */
 export async function initDatabase(): Promise<void> {
-  console.log("📦 Using in-memory storage (data resets on server restart)");
+  console.log(`📦 In-memory storage initialized with ${predictions.length} records`);
+  console.log(`   - ${seedData.length} base historical records (from seed-data.json)`);
+  console.log(`   - ${predictions.length - seedData.length} new predictions (will reset on restart)`);
 }
 
 /**
