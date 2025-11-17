@@ -62,9 +62,9 @@ ${inputData.si_ppm ? `- Silicon (Si): ${inputData.si_ppm} ppm (alarm limit: 15 p
 ## Historical Context
 ${historicalContext}
 
-## Your Task - TWO-STAGE PREDICTION
+## Your Task - HEALTH SCORE PREDICTION
 
-You must simulate a two-stage prediction system (ML Model → AI Refinement):
+You must analyse data and do a prediction on system health and give analysis (ML Model → AI Refinement):
 
 ### STAGE 1: Generate "ml_raw_score" (0.0 to 1.0)
 This simulates what an XGBoost machine learning model would predict based on:
@@ -127,6 +127,9 @@ Respond with ONLY valid JSON (no markdown, no code blocks, no explanations):
   "recommendation": "Continue normal operations, next oil analysis in 200 hours.",
   "confidence": "high"
 }
+
+Always try to compare with the historical data. If the input is closer to a history data try to give a score near for that. 
+Try to undertand what are normal and okay for each attribute
 
 Provide your JSON analysis now.`;
 

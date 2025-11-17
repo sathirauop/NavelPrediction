@@ -80,7 +80,7 @@ export default function PredictionForm({ onResult }: PredictionFormProps) {
               required
               value={formData.oil_hrs || ""}
               onChange={(e) => handleChange("oil_hrs", e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 font-medium"
               placeholder="Hours since last oil change"
             />
           </div>
@@ -95,7 +95,7 @@ export default function PredictionForm({ onResult }: PredictionFormProps) {
               required
               value={formData.total_hrs || ""}
               onChange={(e) => handleChange("total_hrs", e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 font-medium"
               placeholder="Total operating hours"
             />
           </div>
@@ -110,7 +110,7 @@ export default function PredictionForm({ onResult }: PredictionFormProps) {
               required
               value={formData.viscosity_40 || ""}
               onChange={(e) => handleChange("viscosity_40", e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 font-medium"
               placeholder="Oil viscosity"
             />
           </div>
@@ -132,7 +132,7 @@ export default function PredictionForm({ onResult }: PredictionFormProps) {
                 min="0"
                 value={formData.fe_ppm || ""}
                 onChange={(e) => handleChange("fe_ppm", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 font-medium"
                 placeholder="ppm"
               />
             </div>
@@ -146,7 +146,7 @@ export default function PredictionForm({ onResult }: PredictionFormProps) {
                 min="0"
                 value={formData.pb_ppm || ""}
                 onChange={(e) => handleChange("pb_ppm", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 font-medium"
                 placeholder="ppm"
               />
             </div>
@@ -160,7 +160,7 @@ export default function PredictionForm({ onResult }: PredictionFormProps) {
                 min="0"
                 value={formData.cu_ppm || ""}
                 onChange={(e) => handleChange("cu_ppm", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 font-medium"
                 placeholder="ppm"
               />
             </div>
@@ -174,7 +174,7 @@ export default function PredictionForm({ onResult }: PredictionFormProps) {
                 min="0"
                 value={formData.al_ppm || ""}
                 onChange={(e) => handleChange("al_ppm", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 font-medium"
                 placeholder="ppm"
               />
             </div>
@@ -188,7 +188,7 @@ export default function PredictionForm({ onResult }: PredictionFormProps) {
                 min="0"
                 value={formData.si_ppm || ""}
                 onChange={(e) => handleChange("si_ppm", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 font-medium"
                 placeholder="ppm"
               />
             </div>
