@@ -4,7 +4,7 @@
 
 ### Single-Server Design
 
-The application runs entirely from a **single Next.js server**. Python is called as needed via child processes - no separate backend server required!
+The application runs entirely from a **single Next.js server**. Python is called as needed via child processes - no separate backend server required!:::
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
