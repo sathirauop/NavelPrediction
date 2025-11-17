@@ -5,7 +5,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAllPredictions, getHistoricalData } from "@/lib/database";
 
-// Force Node.js runtime for database compatibility
+// Force Node.js runtime for database compatibilityy
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
