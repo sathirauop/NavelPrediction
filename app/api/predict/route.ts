@@ -1,15 +1,14 @@
 /**
- * Main Prediction API Route
- * Orchestrates: ML Model (ONNX) → Historical Data → Gemini → Storage
+ * Simplified Prediction API Route
+ * Direct Gemini API call - no ONNX, no Postgres, just simple file storage!
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { ShipDataInput, PredictionResult } from "@/lib/types";
-import { getHistoricalData, insertPrediction, getLatestPrediction } from "@/lib/database";
-import { analyzeShipHealth } from "@/lib/gemini";
-import { predictHealthScore } from "@/lib/onnx-predictor";
+import { getLatestPrediction, insertPrediction, getHistoricalData } from "@/lib/simple-storage";
+import { predictWithGemini } from "@/lib/simple-gemini";
 
-// Force Node.js runtime for ONNX compatibility
+// Force Node.js runtime for file system access
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
@@ -18,14 +17,14 @@ export async function POST(request: NextRequest) {
     // Parse input data
     const inputData: ShipDataInput = await request.json();
 
-    // Auto-calculate health_score_lag_1 from database history
+    // Auto-calculate health_score_lag_1 from history
     const latestPrediction = await getLatestPrediction();
     if (latestPrediction) {
       inputData.health_score_lag_1 = latestPrediction.gemini_final_score;
-      console.log(`📊 Using previous health score from history: ${inputData.health_score_lag_1.toFixed(4)}`);
+      console.log(`📊 Using previous health score: ${inputData.health_score_lag_1.toFixed(4)}`);
     } else {
       inputData.health_score_lag_1 = 0;
-      console.log("📊 No history found, using default health score: 0.0 (first prediction)");
+      console.log("📊 First prediction, using default health score: 0.0");
     }
 
     // Validate input
@@ -37,76 +36,52 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log("📊 Starting prediction pipeline...");
+    console.log("🚀 Starting simplified prediction pipeline...");
 
-    // Step 1: Call ONNX ML Model (no Python required!)
-    // console.log("🤖 Calling ONNX ML model...");
-    // const mlResponse = await predictHealthScore(inputData);
-
-    const mlRawScore = 0.1
-    const confidence = "0.1"
-    // console.log(`✅ ML Score: ${mlRawScore.toFixed(4)} (ONNX Runtime)`);
-
-    // Step 2: Fetch Historical Data
-    console.log("📚 Fetching historical data...");
+    // Get historical data for context
     const historicalData = await getHistoricalData(60);
-    console.log(`✅ Retrieved ${historicalData.length} historical records`);
+    console.log(`📚 Retrieved ${historicalData.length} historical records`);
 
-    // Step 3: Send to Gemini for Analysis
-    console.log("🧠 Analyzing with Gemini AI...");
-    const geminiAnalysis = await analyzeShipHealth(
-      mlRawScore,
-      inputData,
-      historicalData
-    );
-    console.log(`✅ Gemini Analysis: ${geminiAnalysis.status}, Score: ${geminiAnalysis.final_score.toFixed(4)}`);
+    // Call Gemini directly (no ML model needed!)
+    console.log("🧠 Calling Gemini AI for prediction...");
+    const prediction = await predictWithGemini(inputData, historicalData);
 
-    // Step 4: Store Result in Database
-    console.log("💾 Storing result in database...");
+    console.log(`✅ Prediction complete!`);
+    console.log(`   ML Score (simulated): ${prediction.ml_raw_score.toFixed(4)}`);
+    console.log(`   Final Score: ${prediction.gemini_final_score.toFixed(4)}`);
+    console.log(`   Status: ${prediction.status}`);
+
+    // Store result in file
+    console.log("💾 Saving to file storage...");
     const recordId = await insertPrediction({
       input: inputData,
-      ml_raw_score: mlRawScore,
-      gemini_final_score: geminiAnalysis.final_score,
-      status: geminiAnalysis.status,
-      trend: geminiAnalysis.trend,
-      recommendation: geminiAnalysis.recommendation,
-      confidence: confidence,
+      ml_raw_score: prediction.ml_raw_score,
+      gemini_final_score: prediction.gemini_final_score,
+      status: prediction.status,
+      trend: prediction.trend,
+      recommendation: prediction.recommendation,
+      confidence: prediction.confidence,
     });
-    console.log(`✅ Record saved with ID: ${recordId}`);
+    console.log(`✅ Saved with ID: ${recordId}`);
 
-    // Step 5: Return Complete Result
+    // Return result
     const result: PredictionResult = {
       id: recordId,
       timestamp: new Date().toISOString(),
       input_data: inputData,
-      ml_raw_score: mlRawScore,
-      gemini_final_score: geminiAnalysis.final_score,
-      status: geminiAnalysis.status,
-      trend: geminiAnalysis.trend,
-      recommendation: geminiAnalysis.recommendation,
-      confidence: confidence,
+      ml_raw_score: prediction.ml_raw_score,
+      gemini_final_score: prediction.gemini_final_score,
+      status: prediction.status,
+      trend: prediction.trend,
+      recommendation: prediction.recommendation,
+      confidence: prediction.confidence,
     };
 
-    console.log("✅ Prediction pipeline completed successfully");
+    console.log("✅ Pipeline completed successfully\n");
 
     return NextResponse.json(result, { status: 200 });
   } catch (error: any) {
-    console.error("❌ Prediction pipeline error:", error);
-
-    // Handle ONNX model errors
-    if (error.message?.includes("ONNX prediction failed")) {
-      return NextResponse.json(
-        { error: "ONNX model inference failed. Please check the model file." },
-        { status: 503 }
-      );
-    }
-
-    if (error.message?.includes("Failed to load ONNX model")) {
-      return NextResponse.json(
-        { error: "ML model file not found. Please ensure the ONNX model is in python-backend/models/" },
-        { status: 503 }
-      );
-    }
+    console.error("❌ Prediction error:", error);
 
     return NextResponse.json(
       { error: error.message || "Prediction failed" },
@@ -139,7 +114,7 @@ function validateInput(data: ShipDataInput): { valid: boolean; error?: string } 
     return { valid: false, error: "Invalid oil_topup: must be 0 or 1" };
   }
 
-  // health_score_lag_1 is auto-calculated from history, so we just validate it exists and is valid
+  // health_score_lag_1 is auto-calculated, just validate
   if (
     typeof data.health_score_lag_1 !== "number" ||
     data.health_score_lag_1 < 0 ||

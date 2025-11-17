@@ -1,11 +1,12 @@
 /**
  * Historical Data API Route
+ * Uses simple file storage
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { getAllPredictions, getHistoricalData } from "@/lib/database";
+import { getAllPredictions, getHistoricalData } from "@/lib/simple-storage";
 
-// Force Node.js runtime for database compatibilityy
+// Force Node.js runtime for file system access
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 

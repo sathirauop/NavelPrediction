@@ -1,11 +1,12 @@
 /**
  * Dashboard Statistics API Route
+ * Uses simple file storage
  */
 
 import { NextResponse } from "next/server";
-import { getDashboardStats } from "@/lib/database";
+import { getDashboardStats } from "@/lib/simple-storage";
 
-// Force Node.js runtime for database compatibility
+// Force Node.js runtime for file system access
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
