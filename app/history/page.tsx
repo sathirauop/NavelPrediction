@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { HistoricalDataPoint } from "@/lib/types";
 import HistoryTable from "@/components/HistoryTable";
+import TrendAnalysis from "@/components/TrendAnalysis";
 import Link from "next/link";
 
 export default function HistoryPage() {
@@ -31,26 +32,6 @@ export default function HistoryPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Prediction History</h1>
-              <p className="text-sm text-gray-600">
-                Historical engine health predictions and trends
-              </p>
-            </div>
-            <Link
-              href="/"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              New Prediction
-            </Link>
-          </div>
-        </div>
-      </header>
-
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {loading ? (
@@ -134,6 +115,9 @@ export default function HistoryPage() {
                 </div>
               </div>
             </div>
+
+            {/* Trend Analysis */}
+            <TrendAnalysis data={data} />
 
             {/* History Table */}
             <HistoryTable data={data} />
