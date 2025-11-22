@@ -15,6 +15,8 @@ export interface ShipDataInput {
   oil_hrs: number;
   total_hrs: number;
   viscosity_40: number;
+  viscosity_100?: number;
+  viscosity_index?: number;
   oil_refill_start: number; // 0 or 1
   oil_topup: number; // 0 or 1
   health_score_lag_1: number; // 0-1
@@ -24,6 +26,13 @@ export interface ShipDataInput {
   cu_ppm?: number;
   al_ppm?: number;
   si_ppm?: number;
+  cr_ppm?: number;
+  sn_ppm?: number;
+  ni_ppm?: number;
+  // Other properties
+  tbn?: number;
+  water_content?: string;
+  flash_point?: number;
 }
 
 export interface MLPredictionResponse {
@@ -58,6 +67,8 @@ export interface HistoricalDataPoint {
   oil_hrs: number;
   total_hrs: number;
   viscosity_40: number;
+  viscosity_100: number | null;
+  viscosity_index: number | null;
   oil_refill_start: number;
   oil_topup: number;
   health_score_lag_1: number;
@@ -66,6 +77,12 @@ export interface HistoricalDataPoint {
   cu_ppm: number | null;
   al_ppm: number | null;
   si_ppm: number | null;
+  cr_ppm: number | null;
+  sn_ppm: number | null;
+  ni_ppm: number | null;
+  tbn: number | null;
+  water_content: string | null;
+  flash_point: number | null;
   ml_raw_score: number;
   gemini_final_score: number;
   status: HealthStatus;

@@ -1318,5 +1318,27 @@
     "recommendation": "Monitor closely, slight degradation detected",
     "confidence": "historical",
     "created_at": "2025-10-27 18:24:21"
+  },
+  {
+    "id": 61,
+    "timestamp": "2025-04-27T18:24:21.134Z",
+    "oil_hrs": 1108,
+    "total_hrs": 92417.55,
+    "viscosity_40": 122.1,
+    "oil_refill_start": 0,
+    "oil_topup": 0,
+    "health_score_lag_1": 0,
+    "fe_ppm": 3.686,
+    "pb_ppm": 2.65,
+    "cu_ppm": 3.507,
+    "al_ppm": 0.5,
+    "si_ppm": 3.804,
+    "ml_raw_score": 0.0857595,
+    "gemini_final_score": 0.0857595,
+    "status": "OPTIMAL_CONDITION",
+    "trend": "DEGRADING",
+    "recommendation": "Monitor closely, slight degradation detected",
+    "confidence": "historical",
+    "created_at": "2025-10-27 18:24:21"
   }
 ]

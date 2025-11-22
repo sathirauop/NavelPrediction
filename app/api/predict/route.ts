@@ -7,6 +7,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { ShipDataInput, PredictionResult } from "@/lib/types";
 import { getLatestPrediction, insertPrediction, getHistoricalData } from "@/lib/memory-storage";
 import { predictWithGemini } from "@/lib/simple-gemini";
+import fs from 'fs/promises';
+import path from 'path';
 
 // Force Node.js runtime for file system access
 export const runtime = 'nodejs';
@@ -15,7 +17,9 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   try {
     // Parse input data
-    const inputData: ShipDataInput = await request.json();
+    const body = await request.json();
+    const { saveData, ...inputDataRaw } = body;
+    const inputData: ShipDataInput = inputDataRaw;
 
     // Auto-calculate health_score_lag_1 from history
     const latestPrediction = await getLatestPrediction();
@@ -63,6 +67,36 @@ export async function POST(request: NextRequest) {
       confidence: prediction.confidence,
     });
     console.log(`✅ Saved with ID: ${recordId}`);
+
+    // Save to persistent JSON file if requested
+    if (saveData) {
+      try {
+        const filePath = path.join(process.cwd(), 'lib', 'seed-data-new.json');
+        console.log(`📝 Persisting to ${filePath}...`);
+
+        const fileContent = await fs.readFile(filePath, 'utf-8');
+        const currentData = JSON.parse(fileContent);
+
+        const newRecord = {
+          id: recordId,
+          created_at: new Date().toISOString(),
+          ...inputData,
+          ml_raw_score: prediction.ml_raw_score,
+          gemini_final_score: prediction.gemini_final_score,
+          status: prediction.status,
+          trend: prediction.trend,
+          recommendation: prediction.recommendation,
+          confidence: prediction.confidence
+        };
+
+        currentData.push(newRecord);
+        await fs.writeFile(filePath, JSON.stringify(currentData, null, 2));
+        console.log("✅ Successfully saved to persistent storage");
+      } catch (fsError) {
+        console.error("❌ Failed to save to persistent storage:", fsError);
+        // Don't fail the request, just log the error
+      }
+    }
 
     // Return result
     const result: PredictionResult = {

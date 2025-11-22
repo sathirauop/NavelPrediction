@@ -6,7 +6,7 @@
  */
 
 import { HealthStatus, TrendDirection } from "./types";
-import seedData from "./seed-data.json";
+import seedData from "./seed-data-new.json";
 
 export interface StoredPrediction {
   id: number;
@@ -14,14 +14,22 @@ export interface StoredPrediction {
   oil_hrs: number;
   total_hrs: number;
   viscosity_40: number;
+  viscosity_100: number | null;
+  viscosity_index: number | null;
   oil_refill_start: number;
   oil_topup: number;
   health_score_lag_1: number;
-  fe_ppm?: number;
-  pb_ppm?: number;
-  cu_ppm?: number;
-  al_ppm?: number;
-  si_ppm?: number;
+  fe_ppm: number | null;
+  pb_ppm: number | null;
+  cu_ppm: number | null;
+  al_ppm: number | null;
+  si_ppm: number | null;
+  cr_ppm: number | null;
+  sn_ppm: number | null;
+  ni_ppm: number | null;
+  tbn: number | null;
+  water_content: string | null;
+  flash_point: number | null;
   ml_raw_score: number;
   gemini_final_score: number;
   status: HealthStatus;
@@ -32,19 +40,27 @@ export interface StoredPrediction {
 
 // Initialize with seed data (60 historical records)
 let predictions: StoredPrediction[] = (seedData as any[]).map((item, index) => ({
-  id: index + 1,
-  timestamp: item.timestamp,
+  id: item.id,
+  timestamp: item.created_at || new Date().toISOString(), // Use created_at as timestamp if available
   oil_hrs: item.oil_hrs,
   total_hrs: item.total_hrs,
   viscosity_40: item.viscosity_40,
+  viscosity_100: item.viscosity_100 || null,
+  viscosity_index: item.viscosity_index || null,
   oil_refill_start: item.oil_refill_start,
   oil_topup: item.oil_topup,
   health_score_lag_1: item.health_score_lag_1,
-  fe_ppm: item.fe_ppm,
-  pb_ppm: item.pb_ppm,
-  cu_ppm: item.cu_ppm,
-  al_ppm: item.al_ppm,
-  si_ppm: item.si_ppm,
+  fe_ppm: item.fe_ppm || null,
+  pb_ppm: item.pb_ppm || null,
+  cu_ppm: item.cu_ppm || null,
+  al_ppm: item.al_ppm || null,
+  si_ppm: item.si_ppm || null,
+  cr_ppm: item.cr_ppm || null,
+  sn_ppm: item.sn_ppm || null,
+  ni_ppm: item.ni_ppm || null,
+  tbn: item.tbn || null,
+  water_content: item.water_content || null,
+  flash_point: item.flash_point || null,
   ml_raw_score: item.ml_raw_score,
   gemini_final_score: item.gemini_final_score,
   status: item.status as HealthStatus,
@@ -65,6 +81,8 @@ export async function insertPrediction(data: {
     oil_hrs: number;
     total_hrs: number;
     viscosity_40: number;
+    viscosity_100?: number;
+    viscosity_index?: number;
     oil_refill_start: number;
     oil_topup: number;
     health_score_lag_1: number;
@@ -73,6 +91,12 @@ export async function insertPrediction(data: {
     cu_ppm?: number;
     al_ppm?: number;
     si_ppm?: number;
+    cr_ppm?: number;
+    sn_ppm?: number;
+    ni_ppm?: number;
+    tbn?: number;
+    water_content?: string;
+    flash_point?: number;
   };
   ml_raw_score: number;
   gemini_final_score: number;
@@ -87,14 +111,22 @@ export async function insertPrediction(data: {
     oil_hrs: data.input.oil_hrs,
     total_hrs: data.input.total_hrs,
     viscosity_40: data.input.viscosity_40,
+    viscosity_100: data.input.viscosity_100 || null,
+    viscosity_index: data.input.viscosity_index || null,
     oil_refill_start: data.input.oil_refill_start,
     oil_topup: data.input.oil_topup,
     health_score_lag_1: data.input.health_score_lag_1,
-    fe_ppm: data.input.fe_ppm,
-    pb_ppm: data.input.pb_ppm,
-    cu_ppm: data.input.cu_ppm,
-    al_ppm: data.input.al_ppm,
-    si_ppm: data.input.si_ppm,
+    fe_ppm: data.input.fe_ppm || null,
+    pb_ppm: data.input.pb_ppm || null,
+    cu_ppm: data.input.cu_ppm || null,
+    al_ppm: data.input.al_ppm || null,
+    si_ppm: data.input.si_ppm || null,
+    cr_ppm: data.input.cr_ppm || null,
+    sn_ppm: data.input.sn_ppm || null,
+    ni_ppm: data.input.ni_ppm || null,
+    tbn: data.input.tbn || null,
+    water_content: data.input.water_content || null,
+    flash_point: data.input.flash_point || null,
     ml_raw_score: data.ml_raw_score,
     gemini_final_score: data.gemini_final_score,
     status: data.status,
@@ -211,14 +243,22 @@ export async function importHistoricalData(data: any[]): Promise<number> {
     oil_hrs: item.oil_hrs,
     total_hrs: item.total_hrs,
     viscosity_40: item.viscosity_40,
+    viscosity_100: item.viscosity_100 || null,
+    viscosity_index: item.viscosity_index || null,
     oil_refill_start: item.oil_refill_start,
     oil_topup: item.oil_topup,
     health_score_lag_1: item.health_score_lag_1,
-    fe_ppm: item.fe_ppm,
-    pb_ppm: item.pb_ppm,
-    cu_ppm: item.cu_ppm,
-    al_ppm: item.al_ppm,
-    si_ppm: item.si_ppm,
+    fe_ppm: item.fe_ppm || null,
+    pb_ppm: item.pb_ppm || null,
+    cu_ppm: item.cu_ppm || null,
+    al_ppm: item.al_ppm || null,
+    si_ppm: item.si_ppm || null,
+    cr_ppm: item.cr_ppm || null,
+    sn_ppm: item.sn_ppm || null,
+    ni_ppm: item.ni_ppm || null,
+    tbn: item.tbn || null,
+    water_content: item.water_content || null,
+    flash_point: item.flash_point || null,
     ml_raw_score: item.ml_raw_score,
     gemini_final_score: item.gemini_final_score,
     status: item.status,
