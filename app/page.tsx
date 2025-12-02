@@ -1,22 +1,48 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@/lib/auth";
 import PredictionForm from "@/components/PredictionForm";
 import ResultsDisplay from "@/components/ResultsDisplay";
 import { PredictionResult } from "@/lib/types";
 import Link from "next/link";
 
 export default function Home() {
+  const { user } = useAuth();
   const [result, setResult] = useState<PredictionResult | null>(null);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50">
+    <div className="min-h-screen">
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column: Input Form */}
           <div>
-            <PredictionForm onResult={setResult} />
+            {user?.role === "VIEWER" ? (
+              <div className="bg-white rounded-lg shadow-md p-8 text-center">
+                <svg
+                  className="mx-auto h-16 w-16 text-gray-400 mb-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
+                </svg>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  View Only Access
+                </h3>
+                <p className="text-gray-600">
+                  You do not have permission to add new predictions. Please contact an administrator.
+                </p>
+              </div>
+            ) : (
+              <PredictionForm onResult={setResult} />
+            )}
           </div>
 
           {/* Right Column: Results */}

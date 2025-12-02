@@ -27,9 +27,19 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased relative min-h-screen`}
         suppressHydrationWarning
       >
+        {/* Global Background Image */}
+        <div className="fixed inset-0 z-[-1]">
+          <img
+            src="/Navy1.jpg"
+            alt="Navy Background"
+            className="w-full h-full object-cover blur-sm scale-105"
+          />
+          <div className="absolute inset-0 bg-white/30 dark:bg-black/40" />
+        </div>
+
         <AuthProvider>
           <Navbar />
           {children}

@@ -11,7 +11,7 @@ export default function Navbar() {
     if (!user) return null;
 
     return (
-        <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+        <header className="bg-gray-900/90 backdrop-blur-md shadow-sm border-b border-gray-800 sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-8">
@@ -33,12 +33,9 @@ export default function Navbar() {
                                     </svg>
                                 </div>
                                 <div>
-                                    <h1 className="text-xl font-bold text-gray-900 leading-none">
+                                    <h1 className="text-xl font-bold text-white leading-none">
                                         Naval Predictions
                                     </h1>
-                                    <p className="text-xs text-gray-500 mt-0.5">
-                                        SLNS Gajabahu No. 02 Generator
-                                    </p>
                                 </div>
                             </Link>
                         </div>
@@ -47,8 +44,8 @@ export default function Navbar() {
                             <Link
                                 href="/"
                                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${pathname === "/"
-                                        ? "bg-blue-50 text-blue-700"
-                                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                                    ? "bg-blue-900/50 text-blue-200"
+                                    : "text-gray-300 hover:text-white hover:bg-gray-800"
                                     }`}
                             >
                                 Dashboard
@@ -56,8 +53,8 @@ export default function Navbar() {
                             <Link
                                 href="/history"
                                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${pathname === "/history"
-                                        ? "bg-blue-50 text-blue-700"
-                                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                                    ? "bg-blue-900/50 text-blue-200"
+                                    : "text-gray-300 hover:text-white hover:bg-gray-800"
                                     }`}
                             >
                                 History & Trends
@@ -67,16 +64,16 @@ export default function Navbar() {
 
                     <div className="flex items-center gap-4">
                         <div className="hidden sm:flex flex-col items-end">
-                            <span className="text-sm font-medium text-gray-900">
+                            <span className="text-sm font-medium text-white">
                                 {user.name}
                             </span>
-                            <span className="text-xs text-gray-500 uppercase tracking-wider">
+                            <span className="text-xs text-gray-400 uppercase tracking-wider">
                                 {user.role}
                             </span>
                         </div>
                         <button
                             onClick={logout}
-                            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+                            className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-full transition-colors"
                             title="Sign Out"
                         >
                             <svg

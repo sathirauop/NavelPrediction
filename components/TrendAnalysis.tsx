@@ -141,10 +141,10 @@ export default function TrendAnalysis({ data }: TrendAnalysisProps) {
                 (a, b) =>
                     new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
             )
-            .map((point) => ({
+            .map((point, index) => ({
                 ...point,
-                // Use ID for X-axis as requested
-                xLabel: point.id,
+                // Use index for X-axis to start from zero
+                xLabel: index,
                 // Normalize scores to 0-100 for display if needed, or keep raw
                 gemini_final_score: point.gemini_final_score * 100,
                 ml_raw_score: point.ml_raw_score * 100,
@@ -226,7 +226,7 @@ export default function TrendAnalysis({ data }: TrendAnalysisProps) {
                             tickLine={false}
                             tick={{ fill: "#6b7280", fontSize: 12 }}
                             dy={10}
-                            label={{ value: 'Record ID', position: 'insideBottomRight', offset: -5, fontSize: 12, fill: '#9ca3af' }}
+                            label={{ value: 'Data Point', position: 'insideBottomRight', offset: -5, fontSize: 12, fill: '#9ca3af' }}
                         />
                         <YAxis
                             axisLine={false}
@@ -247,7 +247,7 @@ export default function TrendAnalysis({ data }: TrendAnalysisProps) {
                                 `${value.toFixed(2)} ${currentMetric.unit}`,
                                 currentMetric.label,
                             ]}
-                            labelFormatter={(label) => `Record ID: ${label}`}
+                            labelFormatter={(label) => `Data Point: ${label}`}
                             labelStyle={{ color: "#374151", marginBottom: "0.5rem" }}
                         />
                         <Area

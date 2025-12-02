@@ -27,8 +27,8 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-            <div className="w-full max-w-sm p-8">
+        <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
+            <div className="w-full max-w-sm p-8 relative z-10 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-xl shadow-2xl border border-white/20">
                 <div className="text-center mb-10">
                     <h1 className="text-2xl font-semibold text-gray-900 dark:text-white tracking-tight">
                         Naval Predictions
