@@ -34,7 +34,7 @@ export default function Navbar() {
                                 </div>
                                 <div>
                                     <h1 className="text-xl font-bold text-white leading-none">
-                                        Naval Predictions
+                                        Naval  Predictions
                                     </h1>
                                 </div>
                             </Link>
