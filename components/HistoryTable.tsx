@@ -1,12 +1,14 @@
 "use client";
 
 import { HistoricalDataPoint, STATUS_COLORS } from "@/lib/types";
+import { getShipDisplayName } from "@/lib/ship-data";
 
 interface HistoryTableProps {
   data: HistoricalDataPoint[];
+  selectedShip?: string;
 }
 
-export default function HistoryTable({ data }: HistoryTableProps) {
+export default function HistoryTable({ data, selectedShip }: HistoryTableProps) {
   if (data.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow-md p-8 text-center">
@@ -23,6 +25,9 @@ export default function HistoryTable({ data }: HistoryTableProps) {
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 ID
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Ship
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Health Score
@@ -46,6 +51,9 @@ export default function HistoryTable({ data }: HistoryTableProps) {
               <tr key={row.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {row.id}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {getShipDisplayName(row.ship_name)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">

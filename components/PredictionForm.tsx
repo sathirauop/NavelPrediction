@@ -1,18 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ShipDataInput, PredictionResult } from "@/lib/types";
+import { SHIP_NAMES, getShipDefaultData } from "@/lib/ship-data";
 
 interface PredictionFormProps {
   onResult: (result: PredictionResult) => void;
+  selectedShip?: string;
+  onShipChange?: (ship: string) => void;
 }
 
-export default function PredictionForm({ onResult }: PredictionFormProps) {
+export default function PredictionForm({ onResult, selectedShip: externalSelectedShip, onShipChange }: PredictionFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saveData, setSaveData] = useState(false);
+  const [selectedShip, setSelectedShip] = useState<string>(externalSelectedShip || "ALL");
 
   const [formData, setFormData] = useState<ShipDataInput>({
+    ship_name: externalSelectedShip || "ALL",
     oil_hrs: 3500,
     total_hrs: 98000,
     viscosity_40: 140,
@@ -33,6 +38,55 @@ export default function PredictionForm({ onResult }: PredictionFormProps) {
     water_content: undefined,
     flash_point: undefined,
   });
+
+  // Update form when ship selection changes
+  useEffect(() => {
+    if (selectedShip && selectedShip !== "ALL") {
+      const shipData = getShipDefaultData(selectedShip);
+      if (shipData) {
+        setFormData(shipData);
+      }
+    }
+  }, [selectedShip]);
+
+  const handleShipChange = (ship: string) => {
+    setSelectedShip(ship);
+    if (onShipChange) {
+      onShipChange(ship);
+    }
+
+    // Pre-fill form with ship's default data
+    if (ship === "ALL") {
+      // Reset to default values
+      setFormData({
+        ship_name: "ALL",
+        oil_hrs: 3500,
+        total_hrs: 98000,
+        viscosity_40: 140,
+        viscosity_100: undefined,
+        viscosity_index: undefined,
+        oil_refill_start: 0,
+        oil_topup: 0,
+        health_score_lag_1: 0,
+        fe_ppm: undefined,
+        pb_ppm: undefined,
+        cu_ppm: undefined,
+        al_ppm: undefined,
+        si_ppm: undefined,
+        cr_ppm: undefined,
+        sn_ppm: undefined,
+        ni_ppm: undefined,
+        tbn: undefined,
+        water_content: undefined,
+        flash_point: undefined,
+      });
+    } else {
+      const shipData = getShipDefaultData(ship);
+      if (shipData) {
+        setFormData(shipData);
+      }
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,6 +132,29 @@ export default function PredictionForm({ onResult }: PredictionFormProps) {
         <h2 className="text-2xl font-bold mb-4 text-gray-800">
           Engine Data Input
         </h2>
+
+        {/* Ship Selector */}
+        <div className="mb-6 bg-blue-50 p-4 rounded-lg border border-blue-200">
+          <label className="block text-sm font-semibold text-gray-800 mb-2">
+            Select Ship <span className="text-blue-600">*</span>
+          </label>
+          <select
+            value={selectedShip}
+            onChange={(e) => handleShipChange(e.target.value)}
+            className="w-full px-4 py-3 border-2 border-blue-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 font-medium bg-white text-lg"
+          >
+            {SHIP_NAMES.map((ship) => (
+              <option key={ship} value={ship}>
+                {ship === "ALL" ? "All Ships" : `SLNS ${ship}`}
+              </option>
+            ))}
+          </select>
+          {selectedShip !== "ALL" && (
+            <p className="mt-2 text-sm text-blue-700">
+              Form pre-filled with {selectedShip}'s latest oil change data
+            </p>
+          )}
+        </div>
 
         {/* Core Metrics */}
         <div className="mb-6">

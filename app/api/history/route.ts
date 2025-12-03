@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { getAllPredictions, getHistoricalData } from "@/lib/memory-storage";
+import { getAllPredictions, getHistoricalData, getHistoricalDataByShip } from "@/lib/memory-storage";
 
 // Force Node.js runtime for file system access
 export const runtime = 'nodejs';
@@ -14,9 +14,14 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const limit = searchParams.get("limit");
+    const ship = searchParams.get("ship");
 
     let data;
-    if (limit) {
+
+    // Filter by ship if provided
+    if (ship && ship !== "ALL") {
+      data = await getHistoricalDataByShip(ship, limit ? parseInt(limit) : 60);
+    } else if (limit) {
       data = await getHistoricalData(parseInt(limit));
     } else {
       data = await getAllPredictions();

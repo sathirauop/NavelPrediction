@@ -11,6 +11,7 @@ import seedData from "./seed-data-new.json";
 export interface StoredPrediction {
   id: number;
   timestamp: string;
+  ship_name: string | null;
   oil_hrs: number;
   total_hrs: number;
   viscosity_40: number;
@@ -42,6 +43,7 @@ export interface StoredPrediction {
 let predictions: StoredPrediction[] = (seedData as any[]).map((item, index) => ({
   id: item.id,
   timestamp: item.created_at || new Date().toISOString(), // Use created_at as timestamp if available
+  ship_name: item.ship_name || null,
   oil_hrs: item.oil_hrs,
   total_hrs: item.total_hrs,
   viscosity_40: item.viscosity_40,
@@ -78,6 +80,7 @@ console.log(`📦 Loaded ${predictions.length} historical records from seed data
  */
 export async function insertPrediction(data: {
   input: {
+    ship_name?: string;
     oil_hrs: number;
     total_hrs: number;
     viscosity_40: number;
@@ -108,6 +111,7 @@ export async function insertPrediction(data: {
   const newPrediction: StoredPrediction = {
     id: nextId++,
     timestamp: new Date().toISOString(),
+    ship_name: data.input.ship_name || null,
     oil_hrs: data.input.oil_hrs,
     total_hrs: data.input.total_hrs,
     viscosity_40: data.input.viscosity_40,
@@ -152,6 +156,34 @@ export async function getLatestPrediction(): Promise<StoredPrediction | null> {
  */
 export async function getHistoricalData(limit: number = 60): Promise<StoredPrediction[]> {
   return predictions.slice(-limit);
+}
+
+/**
+ * Get historical data filtered by ship
+ */
+export async function getHistoricalDataByShip(
+  shipName: string,
+  limit: number = 60
+): Promise<StoredPrediction[]> {
+  if (shipName === "ALL" || !shipName) {
+    return getHistoricalData(limit);
+  }
+  const filtered = predictions.filter(p => p.ship_name === shipName);
+  return filtered.slice(-limit);
+}
+
+/**
+ * Get latest prediction by ship
+ */
+export async function getLatestPredictionByShip(
+  shipName: string
+): Promise<StoredPrediction | null> {
+  if (shipName === "ALL" || !shipName) {
+    return getLatestPrediction();
+  }
+  const filtered = predictions.filter(p => p.ship_name === shipName);
+  if (filtered.length === 0) return null;
+  return filtered[filtered.length - 1];
 }
 
 /**
@@ -240,6 +272,7 @@ export async function importHistoricalData(data: any[]): Promise<number> {
   predictions = data.map((item, index) => ({
     id: index + 1,
     timestamp: item.timestamp || new Date().toISOString(),
+    ship_name: item.ship_name || null,
     oil_hrs: item.oil_hrs,
     total_hrs: item.total_hrs,
     viscosity_40: item.viscosity_40,

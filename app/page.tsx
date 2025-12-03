@@ -10,6 +10,7 @@ import Link from "next/link";
 export default function Home() {
   const { user } = useAuth();
   const [result, setResult] = useState<PredictionResult | null>(null);
+  const [selectedShip, setSelectedShip] = useState<string>("ALL");
 
   return (
     <div className="min-h-screen">
@@ -41,7 +42,11 @@ export default function Home() {
                 </p>
               </div>
             ) : (
-              <PredictionForm onResult={setResult} />
+              <PredictionForm
+                onResult={setResult}
+                selectedShip={selectedShip}
+                onShipChange={setSelectedShip}
+              />
             )}
           </div>
 

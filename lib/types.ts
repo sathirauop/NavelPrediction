@@ -11,7 +11,10 @@ export type HealthStatus =
 
 export type TrendDirection = "IMPROVING" | "STABLE" | "DEGRADING";
 
+export type ShipName = "ALL" | "GAJABAHU" | "SAGARA" | "SAYURA" | "SHAKTHI" | "VIJAYABAHU";
+
 export interface ShipDataInput {
+  ship_name?: string;
   oil_hrs: number;
   total_hrs: number;
   viscosity_40: number;
@@ -52,6 +55,7 @@ export interface GeminiAnalysis {
 export interface PredictionResult {
   id?: number;
   timestamp: string;
+  ship_name?: string;
   input_data: ShipDataInput;
   ml_raw_score: number;
   gemini_final_score: number;
@@ -64,6 +68,7 @@ export interface PredictionResult {
 export interface HistoricalDataPoint {
   id: number;
   timestamp: string;
+  ship_name: string | null;
   oil_hrs: number;
   total_hrs: number;
   viscosity_40: number;

@@ -4,20 +4,26 @@ import { useEffect, useState } from "react";
 import { HistoricalDataPoint } from "@/lib/types";
 import HistoryTable from "@/components/HistoryTable";
 import TrendAnalysis from "@/components/TrendAnalysis";
+import { SHIP_NAMES } from "@/lib/ship-data";
 import Link from "next/link";
 
 export default function HistoryPage() {
   const [data, setData] = useState<HistoricalDataPoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedShip, setSelectedShip] = useState<string>("ALL");
 
   useEffect(() => {
     fetchHistory();
-  }, []);
+  }, [selectedShip]); // Refetch when ship changes
 
   const fetchHistory = async () => {
     try {
-      const response = await fetch("/api/history");
+      setLoading(true);
+      const url = selectedShip && selectedShip !== "ALL"
+        ? `/api/history?ship=${selectedShip}`
+        : "/api/history";
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Failed to fetch history");
       }
@@ -87,6 +93,24 @@ export default function HistoryPage() {
           </div>
         ) : (
           <>
+            {/* Ship Selector */}
+            <div className="mb-6 bg-white rounded-lg shadow-md p-4">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
+                Filter by Ship
+              </label>
+              <select
+                value={selectedShip}
+                onChange={(e) => setSelectedShip(e.target.value)}
+                className="w-full md:w-64 px-4 py-2 border-2 border-blue-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 font-medium bg-white"
+              >
+                {SHIP_NAMES.map((ship) => (
+                  <option key={ship} value={ship}>
+                    {ship === "ALL" ? "All Ships" : `SLNS ${ship}`}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* Stats Summary */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
               <div className="bg-white rounded-lg shadow-md p-6">
@@ -120,7 +144,7 @@ export default function HistoryPage() {
             <TrendAnalysis data={data} />
 
             {/* History Table */}
-            <HistoryTable data={data} />
+            <HistoryTable data={data} selectedShip={selectedShip} />
           </>
         )}
       </main>

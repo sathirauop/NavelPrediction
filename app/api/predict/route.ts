@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { ShipDataInput, PredictionResult } from "@/lib/types";
-import { getLatestPrediction, insertPrediction, getHistoricalData } from "@/lib/memory-storage";
+import { getLatestPrediction, getLatestPredictionByShip, insertPrediction, getHistoricalData } from "@/lib/memory-storage";
 import { predictWithGemini } from "@/lib/simple-gemini";
 import fs from 'fs/promises';
 import path from 'path';
@@ -21,11 +21,18 @@ export async function POST(request: NextRequest) {
     const { saveData, ...inputDataRaw } = body;
     const inputData: ShipDataInput = inputDataRaw;
 
-    // Auto-calculate health_score_lag_1 from history
-    const latestPrediction = await getLatestPrediction();
+    // Auto-calculate health_score_lag_1 from history (ship-specific if ship is selected)
+    let latestPrediction;
+    if (inputData.ship_name && inputData.ship_name !== "ALL") {
+      latestPrediction = await getLatestPredictionByShip(inputData.ship_name);
+      console.log(`📊 Using previous health score for ${inputData.ship_name}: ${latestPrediction?.gemini_final_score?.toFixed(4) || "N/A"}`);
+    } else {
+      latestPrediction = await getLatestPrediction();
+      console.log(`📊 Using previous health score (all ships): ${latestPrediction?.gemini_final_score?.toFixed(4) || "N/A"}`);
+    }
+
     if (latestPrediction) {
       inputData.health_score_lag_1 = latestPrediction.gemini_final_score;
-      console.log(`📊 Using previous health score: ${inputData.health_score_lag_1.toFixed(4)}`);
     } else {
       inputData.health_score_lag_1 = 0;
       console.log("📊 First prediction, using default health score: 0.0");
@@ -102,6 +109,7 @@ export async function POST(request: NextRequest) {
     const result: PredictionResult = {
       id: recordId,
       timestamp: new Date().toISOString(),
+      ship_name: inputData.ship_name,
       input_data: inputData,
       ml_raw_score: prediction.ml_raw_score,
       gemini_final_score: prediction.gemini_final_score,

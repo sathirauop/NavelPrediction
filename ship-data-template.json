@@ -1,0 +1,165 @@
+{
+    "GAJABAHU": {
+        "latest_oil_change": {
+            "oil_hrs": 0,
+            "total_hrs": 0,
+            "viscosity_40": 0,
+            "viscosity_100": 0,
+            "viscosity_index": 0,
+            "oil_refill_start": 0,
+            "oil_topup": 0,
+            "health_score_lag_1": 0,
+            "fe_ppm": 0,
+            "pb_ppm": 0,
+            "cu_ppm": 0,
+            "al_ppm": 0,
+            "si_ppm": 0,
+            "cr_ppm": 0,
+            "sn_ppm": 0,
+            "ni_ppm": 0,
+            "tbn": 0,
+            "water_content": "",
+            "flash_point": 0
+        },
+        "documents": [
+            "GAJABAHU NO 01 GEN OCMR 24 jUL 25.doc",
+            "GAJABAHU NO 02 GEN OCMR 09 jUL 25.doc"
+        ]
+    },
+    "SAGARA": {
+        "latest_oil_change": {
+            "oil_hrs": 0,
+            "total_hrs": 0,
+            "viscosity_40": 0,
+            "viscosity_100": 0,
+            "viscosity_index": 0,
+            "oil_refill_start": 0,
+            "oil_topup": 0,
+            "health_score_lag_1": 0,
+            "fe_ppm": 0,
+            "pb_ppm": 0,
+            "cu_ppm": 0,
+            "al_ppm": 0,
+            "si_ppm": 0,
+            "cr_ppm": 0,
+            "sn_ppm": 0,
+            "ni_ppm": 0,
+            "tbn": 0,
+            "water_content": "",
+            "flash_point": 0
+        },
+        "documents": [
+            "SAGARA Both ME OCMR 09 Jul 25 correct.doc",
+            "SAGARA GB OCMR DATED 17 Apr 25.docx"
+        ]
+    },
+    "SAYURA": {
+        "latest_oil_change": {
+            "oil_hrs": 0,
+            "total_hrs": 0,
+            "viscosity_40": 0,
+            "viscosity_100": 0,
+            "viscosity_index": 0,
+            "oil_refill_start": 0,
+            "oil_topup": 0,
+            "health_score_lag_1": 0,
+            "fe_ppm": 0,
+            "pb_ppm": 0,
+            "cu_ppm": 0,
+            "al_ppm": 0,
+            "si_ppm": 0,
+            "cr_ppm": 0,
+            "sn_ppm": 0,
+            "ni_ppm": 0,
+            "tbn": 0,
+            "water_content": "",
+            "flash_point": 0
+        },
+        "documents": [
+            "SAYURA GB OCMR 27.03.2024.docx",
+            "SAYURA PGB OCMR 29 May 25.docx",
+            "SAYURA PME OCMR 29 May 25.doc",
+            "SAYURA SME OCMR  31 Dec 24.doc"
+        ]
+    },
+    "SHAKTHI": {
+        "latest_oil_change": {
+            "oil_hrs": 0,
+            "total_hrs": 0,
+            "viscosity_40": 0,
+            "viscosity_100": 0,
+            "viscosity_index": 0,
+            "oil_refill_start": 0,
+            "oil_topup": 0,
+            "health_score_lag_1": 0,
+            "fe_ppm": 0,
+            "pb_ppm": 0,
+            "cu_ppm": 0,
+            "al_ppm": 0,
+            "si_ppm": 0,
+            "cr_ppm": 0,
+            "sn_ppm": 0,
+            "ni_ppm": 0,
+            "tbn": 0,
+            "water_content": "",
+            "flash_point": 0
+        },
+        "documents": [
+            "SHAKTHI Both ME OCMR DATED 27 Aug 25.doc",
+            "SHAKTHI Port GB OCMR 19 Dec 24.docx",
+            "SHAKTHI SGB OCMR 29 May 25.docx"
+        ]
+    },
+    "VIJAYABAHU": {
+        "latest_oil_change": {
+            "oil_hrs": 0,
+            "total_hrs": 0,
+            "viscosity_40": 0,
+            "viscosity_100": 0,
+            "viscosity_index": 0,
+            "oil_refill_start": 0,
+            "oil_topup": 0,
+            "health_score_lag_1": 0,
+            "fe_ppm": 0,
+            "pb_ppm": 0,
+            "cu_ppm": 0,
+            "al_ppm": 0,
+            "si_ppm": 0,
+            "cr_ppm": 0,
+            "sn_ppm": 0,
+            "ni_ppm": 0,
+            "tbn": 0,
+            "water_content": "",
+            "flash_point": 0
+        },
+        "documents": [
+            "Vijayabahu Port Gen OCMR dated 07 Aug 25.docx",
+            "Vijayabahu _stbd Gen dated 18 Jun 25.docx"
+        ]
+    },
+    "_instructions": {
+        "description": "Template for ship oil change data. Fill in the latest_oil_change values from the OCMR documents for each ship.",
+        "fields": {
+            "oil_hrs": "Hours since last oil change",
+            "total_hrs": "Total engine operating hours",
+            "viscosity_40": "Viscosity at 40°C (cSt)",
+            "viscosity_100": "Viscosity at 100°C (cSt) - optional",
+            "viscosity_index": "Viscosity index - optional",
+            "oil_refill_start": "1 if oil was refilled/changed, 0 otherwise",
+            "oil_topup": "1 if oil was topped up, 0 otherwise",
+            "health_score_lag_1": "Previous health score (0-1) - can start at 0",
+            "fe_ppm": "Iron concentration in PPM",
+            "pb_ppm": "Lead concentration in PPM",
+            "cu_ppm": "Copper concentration in PPM",
+            "al_ppm": "Aluminum concentration in PPM",
+            "si_ppm": "Silicon concentration in PPM",
+            "cr_ppm": "Chromium concentration in PPM - optional",
+            "sn_ppm": "Tin concentration in PPM - optional",
+            "ni_ppm": "Nickel concentration in PPM - optional",
+            "tbn": "Total Base Number (mg KOH/g) - optional",
+            "water_content": "Water content (%) - optional, can be text like '<0.1'",
+            "flash_point": "Flash point in °C - optional"
+        },
+        "usage": "Fill in the values from the OCMR documents, then this data will be used to pre-fill the form when a ship is selected"
+    }
+}
