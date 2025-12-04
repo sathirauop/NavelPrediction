@@ -4,17 +4,27 @@ import { useState } from "react";
 import { useAuth } from "@/lib/auth";
 import PredictionForm from "@/components/PredictionForm";
 import ResultsDisplay from "@/components/ResultsDisplay";
+import MachinerySelector from "@/components/MachinerySelector";
 import { PredictionResult } from "@/lib/types";
+import { MachinerySelection } from "@/lib/machinery-config";
 import Link from "next/link";
 
 export default function Home() {
   const { user } = useAuth();
   const [result, setResult] = useState<PredictionResult | null>(null);
+  const [selection, setSelection] = useState<MachinerySelection | null>(null);
+  const [loading, setLoading] = useState(false);
 
   return (
     <div className="min-h-screen">
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Machinery Selector */}
+        <MachinerySelector
+          onSelectionChange={setSelection}
+          onLoadingChange={setLoading}
+        />
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column: Input Form */}
           <div>
@@ -40,8 +50,30 @@ export default function Home() {
                   You do not have permission to add new predictions. Please contact an administrator.
                 </p>
               </div>
+            ) : !selection ? (
+              <div className="bg-white rounded-lg shadow-md p-8 text-center">
+                <svg
+                  className="mx-auto h-16 w-16 text-blue-400 mb-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                  />
+                </svg>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  Select Machinery
+                </h3>
+                <p className="text-gray-600">
+                  Please select a ship and machinery combination above to begin analysis.
+                </p>
+              </div>
             ) : (
-              <PredictionForm onResult={setResult} />
+              <PredictionForm onResult={setResult} disabled={loading} />
             )}
           </div>
 

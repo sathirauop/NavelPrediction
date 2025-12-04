@@ -5,9 +5,10 @@ import { ShipDataInput, PredictionResult } from "@/lib/types";
 
 interface PredictionFormProps {
   onResult: (result: PredictionResult) => void;
+  disabled?: boolean;
 }
 
-export default function PredictionForm({ onResult }: PredictionFormProps) {
+export default function PredictionForm({ onResult, disabled = false }: PredictionFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saveData, setSaveData] = useState(false);
@@ -358,7 +359,7 @@ export default function PredictionForm({ onResult }: PredictionFormProps) {
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || disabled}
           className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {loading ? "Analyzing..." : "Analyze Engine Health"}

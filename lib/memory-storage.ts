@@ -6,7 +6,7 @@
  */
 
 import { HealthStatus, TrendDirection } from "./types";
-import seedData from "./seed-data-new.json";
+import { MachinerySelection } from "./machinery-config";
 
 export interface StoredPrediction {
   id: number;
@@ -38,40 +38,70 @@ export interface StoredPrediction {
   confidence: string;
 }
 
-// Initialize with seed data (60 historical records)
-let predictions: StoredPrediction[] = (seedData as any[]).map((item, index) => ({
-  id: item.id,
-  timestamp: item.created_at || new Date().toISOString(), // Use created_at as timestamp if available
-  oil_hrs: item.oil_hrs,
-  total_hrs: item.total_hrs,
-  viscosity_40: item.viscosity_40,
-  viscosity_100: item.viscosity_100 || null,
-  viscosity_index: item.viscosity_index || null,
-  oil_refill_start: item.oil_refill_start,
-  oil_topup: item.oil_topup,
-  health_score_lag_1: item.health_score_lag_1,
-  fe_ppm: item.fe_ppm || null,
-  pb_ppm: item.pb_ppm || null,
-  cu_ppm: item.cu_ppm || null,
-  al_ppm: item.al_ppm || null,
-  si_ppm: item.si_ppm || null,
-  cr_ppm: item.cr_ppm || null,
-  sn_ppm: item.sn_ppm || null,
-  ni_ppm: item.ni_ppm || null,
-  tbn: item.tbn || null,
-  water_content: item.water_content || null,
-  flash_point: item.flash_point || null,
-  ml_raw_score: item.ml_raw_score,
-  gemini_final_score: item.gemini_final_score,
-  status: item.status as HealthStatus,
-  trend: item.trend as TrendDirection,
-  recommendation: item.recommendation,
-  confidence: item.confidence,
-}));
+// Current machinery selection
+let currentSelection: MachinerySelection | null = null;
 
-let nextId = predictions.length + 1;
+// Initialize with empty predictions (will be loaded dynamically)
+let predictions: StoredPrediction[] = [];
 
-console.log(`📦 Loaded ${predictions.length} historical records from seed data`);
+let nextId = 1;
+
+/**
+ * Convert raw seed data to StoredPrediction format
+ */
+function convertSeedData(seedData: any[]): StoredPrediction[] {
+  return seedData.map((item) => ({
+    id: item.id,
+    timestamp: item.created_at || new Date().toISOString(),
+    oil_hrs: item.oil_hrs,
+    total_hrs: item.total_hrs,
+    viscosity_40: item.viscosity_40,
+    viscosity_100: item.viscosity_100 || null,
+    viscosity_index: item.viscosity_index || null,
+    oil_refill_start: item.oil_refill_start,
+    oil_topup: item.oil_topup,
+    health_score_lag_1: item.health_score_lag_1,
+    fe_ppm: item.fe_ppm || null,
+    pb_ppm: item.pb_ppm || null,
+    cu_ppm: item.cu_ppm || null,
+    al_ppm: item.al_ppm || null,
+    si_ppm: item.si_ppm || null,
+    cr_ppm: item.cr_ppm || null,
+    sn_ppm: item.sn_ppm || null,
+    ni_ppm: item.ni_ppm || null,
+    tbn: item.tbn || null,
+    water_content: item.water_content || null,
+    flash_point: item.flash_point || null,
+    ml_raw_score: item.ml_raw_score,
+    gemini_final_score: item.gemini_final_score,
+    status: item.status as HealthStatus,
+    trend: item.trend as TrendDirection,
+    recommendation: item.recommendation,
+    confidence: item.confidence,
+  }));
+}
+
+/**
+ * Reload seed data with new dataset
+ */
+export async function reloadSeedData(
+  seedData: any[],
+  selection: MachinerySelection
+): Promise<void> {
+  predictions = convertSeedData(seedData);
+  currentSelection = selection;
+  nextId = predictions.length + 1;
+  console.log(
+    `📦 Loaded ${predictions.length} historical records for ${selection.ship} - ${selection.machineryType} (${selection.model})`
+  );
+}
+
+/**
+ * Get current machinery selection
+ */
+export function getCurrentSelection(): MachinerySelection | null {
+  return currentSelection;
+}
 
 /**
  * Insert a new prediction
@@ -221,9 +251,9 @@ export async function getDashboardStats(): Promise<{
  * Initialize database (seed data is auto-loaded on module import)
  */
 export async function initDatabase(): Promise<void> {
-  console.log(`📦 In-memory storage initialized with ${predictions.length} records`);
-  console.log(`   - ${seedData.length} base historical records (from seed-data.json)`);
-  console.log(`   - ${predictions.length - seedData.length} new predictions (will reset on restart)`);
+  console.log(`📦 In-memory storage initialized`);
+  console.log(`   - ${predictions.length} historical records currently loaded`);
+  console.log(`   - Dynamic loading: seed data loaded via machinery selection`);
 }
 
 /**

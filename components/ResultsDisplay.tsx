@@ -1,21 +1,128 @@
 "use client";
 
 import { PredictionResult, STATUS_DESCRIPTIONS, STATUS_COLORS } from "@/lib/types";
+import jsPDF from "jspdf";
 
 interface ResultsDisplayProps {
   result: PredictionResult;
 }
 
+
 export default function ResultsDisplay({ result }: ResultsDisplayProps) {
   const scorePercentage = (result.gemini_final_score * 100).toFixed(1);
   const statusColor = STATUS_COLORS[result.status];
+
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    let yPosition = 20;
+
+    // Title
+    doc.setFontSize(22);
+    doc.setFont("helvetica", "bold");
+    doc.text("Engine Health Analysis", pageWidth / 2, yPosition, { align: "center" });
+    yPosition += 15;
+
+    // Health Score
+    doc.setFontSize(16);
+    doc.text(`${scorePercentage}`, pageWidth / 2, yPosition, { align: "center" });
+    yPosition += 8;
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.text("Health Score", pageWidth / 2, yPosition, { align: "center" });
+    yPosition += 15;
+
+    // Status
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    const statusText = result.status.replace(/_/g, " ");
+    doc.text(statusText, pageWidth / 2, yPosition, { align: "center" });
+    yPosition += 8;
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    const statusDesc = STATUS_DESCRIPTIONS[result.status];
+    const statusLines = doc.splitTextToSize(statusDesc, pageWidth - 40);
+    doc.text(statusLines, pageWidth / 2, yPosition, { align: "center" });
+    yPosition += statusLines.length * 5 + 10;
+
+    // Trend Analysis Section
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("Trend Analysis", 20, yPosition);
+    yPosition += 8;
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.text(result.trend, 20, yPosition);
+    yPosition += 6;
+    doc.setFontSize(10);
+    const trendDesc = getTrendDescription(result.trend);
+    const trendLines = doc.splitTextToSize(trendDesc, pageWidth - 40);
+    doc.text(trendLines, 20, yPosition);
+    yPosition += trendLines.length * 5 + 10;
+
+    // Recommendation Section
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("Recommendation", 20, yPosition);
+    yPosition += 8;
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    const recLines = doc.splitTextToSize(result.recommendation, pageWidth - 40);
+    doc.text(recLines, 20, yPosition);
+    yPosition += recLines.length * 5 + 8;
+    doc.setFont("helvetica", "italic");
+    doc.text(`Confidence: ${result.confidence}`, 20, yPosition);
+    yPosition += 12;
+
+    // Technical Details Section
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("Technical Details", 20, yPosition);
+    yPosition += 8;
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+
+    const technicalData = [
+      { label: "ML Raw Score:", value: result.ml_raw_score.toFixed(4) },
+      { label: "Final Score:", value: result.gemini_final_score.toFixed(4) },
+      { label: "Oil Hours:", value: `${result.input_data.oil_hrs} hrs` },
+      { label: "Total Hours:", value: `${result.input_data.total_hrs} hrs` },
+      { label: "Viscosity @40°C:", value: `${result.input_data.viscosity_40} cSt` },
+      { label: "Timestamp:", value: new Date(result.timestamp).toLocaleString() },
+    ];
+
+    technicalData.forEach((item) => {
+      doc.setFont("helvetica", "bold");
+      doc.text(item.label, 20, yPosition);
+      doc.setFont("helvetica", "normal");
+      doc.text(item.value, 80, yPosition);
+      yPosition += 6;
+    });
+
+    // Save the PDF
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, -5);
+    doc.save(`Engine-Health-Analysis-${timestamp}.pdf`);
+  };
+
 
   return (
     <div className="space-y-6">
       {/* Main Status Card */}
       <div className="bg-white rounded-lg shadow-lg p-8">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Engine Health Analysis</h2>
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <h2 className="text-3xl font-bold text-gray-800">Engine Health Analysis</h2>
+            <button
+              onClick={downloadPDF}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-colors duration-200"
+              title="Download PDF Report"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Download PDF
+            </button>
+          </div>
 
           {/* Health Score Gauge */}
           <div className="relative w-48 h-48 mx-auto mb-6">

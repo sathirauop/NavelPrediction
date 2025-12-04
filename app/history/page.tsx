@@ -1,43 +1,75 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { HistoricalDataPoint } from "@/lib/types";
 import HistoryTable from "@/components/HistoryTable";
 import TrendAnalysis from "@/components/TrendAnalysis";
+import MachinerySelector from "@/components/MachinerySelector";
+import { MachinerySelection } from "@/lib/machinery-config";
 import Link from "next/link";
 
 export default function HistoryPage() {
   const [data, setData] = useState<HistoricalDataPoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selection, setSelection] = useState<MachinerySelection | null>(null);
+  const [selectorLoading, setSelectorLoading] = useState(false);
 
-  useEffect(() => {
-    fetchHistory();
-  }, []);
-
-  const fetchHistory = async () => {
+  const fetchHistory = useCallback(async (sel?: MachinerySelection) => {
+    setLoading(true);
+    setError(null);
     try {
-      const response = await fetch("/api/history");
+      // Build URL with machinery selection for proper data loading
+      let url = "/api/history";
+      if (sel) {
+        const params = new URLSearchParams({
+          ship: sel.ship,
+          machineryType: sel.machineryType,
+          model: sel.model,
+        });
+        url = `/api/history?${params.toString()}`;
+      }
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Failed to fetch history");
       }
       const result = await response.json();
       setData(result.data.reverse()); // Show most recent first
-      setLoading(false);
     } catch (err: any) {
       setError(err.message);
+    } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  // Fetch history when selection changes
+  const handleSelectionChange = useCallback((newSelection: MachinerySelection) => {
+    setSelection(newSelection);
+    // When selection changes, the MachinerySelector already loads new data into memory-storage
+    // We just need to re-fetch from the API to get the updated data
+    fetchHistory(newSelection);
+  }, [fetchHistory]);
 
   return (
     <div className="min-h-screen">
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {loading ? (
+        {/* Machinery Selector - Always visible */}
+        <MachinerySelector
+          onSelectionChange={handleSelectionChange}
+          onLoadingChange={setSelectorLoading}
+        />
+
+        {/* Show loading only while fetching history data (not selector loading) */}
+        {loading && !selectorLoading ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
             <p className="mt-4 text-gray-600">Loading history...</p>
+          </div>
+        ) : selectorLoading ? (
+          <div className="bg-white rounded-lg shadow-md p-12 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading machinery data...</p>
           </div>
         ) : error ? (
           <div className="bg-white rounded-lg shadow-md p-8">

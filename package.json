@@ -15,6 +15,7 @@
     "axios": "^1.13.0",
     "better-sqlite3": "^12.4.1",
     "csv-parser": "^3.2.0",
+    "jspdf": "^3.0.4",
     "next": "16.0.0",
     "onnxruntime-web": "^1.23.2",
     "react": "19.2.0",

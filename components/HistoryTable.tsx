@@ -69,10 +69,10 @@ export default function HistoryTable({ data }: HistoryTableProps) {
                   <TrendBadge trend={row.trend} />
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {row.oil_hrs.toLocaleString()}
+                  {row.oil_hrs != null ? row.oil_hrs.toLocaleString() : "N/A"}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {row.total_hrs.toLocaleString()}
+                  {row.total_hrs != null ? row.total_hrs.toLocaleString() : "N/A"}
                 </td>
               </tr>
             ))}
