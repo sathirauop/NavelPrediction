@@ -33,8 +33,11 @@ export default function Navbar() {
                                     </svg>
                                 </div>
                                 <div>
-                                    <h1 className="text-xl font-bold text-white leading-none">
-                                        Naval  Predictions
+                                    {/* <h1 className="text-xl font-bold text-white leading-none">
+                                        Naval Predictions
+                                    </h1> */}
+                                    <h1 className="text-xs text-blue-200 font-light tracking-wide">
+                                        AI Powered Marine Machinery Oil Analyzing System
                                     </h1>
                                 </div>
                             </Link>
