@@ -362,7 +362,7 @@ export default function PredictionForm({ onResult, disabled = false }: Predictio
           disabled={loading || disabled}
           className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {loading ? "Analyzing..." : "Analyze Engine Health"}
+          {loading ? "Analyzing..." : "Analyse"}
         </button>
       </div>
     </form>

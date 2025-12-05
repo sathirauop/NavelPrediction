@@ -100,7 +100,7 @@ export default function Home() {
                   Ready for Analysis
                 </h3>
                 <p className="text-gray-600">
-                  Enter engine data and click "Analyze Engine Health" to get predictions
+                  Enter engine data and click "Analyse" to get predictions
                 </p>
                 <div className="mt-6 text-sm text-gray-500 space-y-2">
                   <p className="font-semibold">How it works:</p>
